@@ -12,13 +12,13 @@ app.get('/',function(req,res){
 });
 
 app.get('/write/:data',function(req,res){
-  var strParseWriteReq = JSON.stringfy(req.params);
+  var strParseWriteReq = JSON.stringify(req.params);
   var strWriteReq = JSON.parse(strParseWriteReq);
   writedata(data,res);
 });
 
 app.get('/read/:datasize',function(){
-  var strParseReadReq = JSON.stringfy(req.params);
+  var strParseReadReq = JSON.stringify(req.params);
   var strReadReq = JSON.parse(strParseReadReq);
   datasize = strReadReq.datasize;
   readdata(datasize,res);
