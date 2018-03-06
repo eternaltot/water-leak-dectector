@@ -14,6 +14,7 @@ app.get('/',function(req,res){
 app.get('/write/:data',function(req,res){
   var strParseWriteReq = JSON.stringify(req.params);
   var strWriteReq = JSON.parse(strParseWriteReq);
+  data = strWriteReq.data;
   writedata(data,res);
 });
 
