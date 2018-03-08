@@ -15,14 +15,28 @@ app.get('/write/:data',function(req,res){
   var strParseWriteReq = JSON.stringify(req.params);
   var strWriteReq = JSON.parse(strParseWriteReq);
   data = strWriteReq.data;
-  writedata(data,res);
+  writedata(data,res,false);
+});
+
+app.get('/write/leak/:data',function(req,res){
+  var strParseWriteReq = JSON.stringify(req.params);
+  var strWriteReq = JSON.parse(strParseWriteReq);
+  data = strWriteReq.data;
+  writedata(data,res,true);
 });
 
 app.get('/read/:datasize',function(){
   var strParseReadReq = JSON.stringify(req.params);
   var strReadReq = JSON.parse(strParseReadReq);
   datasize = strReadReq.datasize;
-  readdata(datasize,res);
+  readdata(datasize,res,false);
+});
+
+app.get('/read/leak/:datasize',function(){
+  var strParseReadReq = JSON.stringify(req.params);
+  var strReadReq = JSON.parse(strParseReadReq);
+  datasize = strReadReq.datasize;
+  readdata(datasize,res,true);
 });
 
 
@@ -32,13 +46,13 @@ app.listen(port,function(){
 });
 
 
-async function writedata(_data,res){
-  await writeDataToDB(_data,res);
+async function writedata(_data,res,leak){
+  await writeDataToDB(_data,res,leak);
 }
 
-function writeDataToDB(_savedata,res){
+function writeDataToDB(_savedata,res,leak){
   return new Promise(function(resolve,reject){
-    var writecollection = db.collection('waterflowcol');
+    var writecollection = (leak) ? db.collection('waterleakcol') : db.collection('waterflowcol');
     writecollection.insert({
       recordTime:new Date().getTime(),
       data:Number(_savedata),
@@ -54,13 +68,13 @@ function writeDataToDB(_savedata,res){
   });
 }
 
-async function readdata(_datasize,res){
-  await readDataFromDB(_datasize,res);
+async function readdata(_datasize,res,leak){
+  await readDataFromDB(_datasize,res,leak);
 }
 
-function readDataFromDB(_datasize,res){
+function readDataFromDB(_datasize,res,leak){
   return new Promise(function(resolve,reject){
-    var readcollection = db.collection('waterflowcol');
+    var readcollection = (leak) ? db.collection('waterleakcol') : db.collection('waterflowcol');
     readcollection.find({}).limit(Number(_datasize)).sort({recordTime:-1},function(err,docs){
       res.jsonp(docs);
     });
