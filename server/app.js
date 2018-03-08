@@ -25,14 +25,14 @@ app.get('/write/leak/:data',function(req,res){
   writedata(data,res,true);
 });
 
-app.get('/read/:datasize',function(){
+app.get('/read/:datasize',function(req,res){
   var strParseReadReq = JSON.stringify(req.params);
   var strReadReq = JSON.parse(strParseReadReq);
   datasize = strReadReq.datasize;
   readdata(datasize,res,false);
 });
 
-app.get('/read/leak/:datasize',function(){
+app.get('/read/leak/:datasize',function(req,res){
   var strParseReadReq = JSON.stringify(req.params);
   var strReadReq = JSON.parse(strParseReadReq);
   datasize = strReadReq.datasize;
